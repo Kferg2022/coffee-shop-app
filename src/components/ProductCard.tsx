@@ -1,22 +1,22 @@
-import React from 'react'
-import { Button } from './ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card'
-import { useCart } from '../context/CartContext'
+import React from 'react';
+import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from './ui/card';
+import { useCart } from '../context/CartContext';
 
 interface Drink {
-  id: number
-  name: string
-  description: string
-  price: number
-  image: string
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
 }
 
 interface ProductCardProps {
-  drink: Drink
+  drink: Drink;
 }
 
-export function ProductCard({ drink }: ProductCardProps) {
-  const { addToCart } = useCart()
+export const ProductCard: React.FC<ProductCardProps> = ({ drink }) => {
+  const { addToCart } = useCart();
 
   return (
     <Card>
@@ -35,8 +35,8 @@ export function ProductCard({ drink }: ProductCardProps) {
       </CardContent>
       <CardFooter className="flex justify-between">
         <span className="text-2xl font-bold">${drink.price.toFixed(2)}</span>
-        <Button onClick={() => addToCart(drink)}>Add to Cart</Button>
+        <Button onClick={() => addToCart({ ...drink, quantity: 1 })}>Add to Cart</Button>
       </CardFooter>
     </Card>
-  )
-}
+  );
+};

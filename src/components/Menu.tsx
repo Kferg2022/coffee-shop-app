@@ -1,12 +1,12 @@
-import React from 'react'
-import { ProductCard } from './ProductCard'
+import React from 'react';
+import { ProductCard } from './ProductCard';
 
 interface Drink {
-  id: number
-  name: string
-  description: string
-  price: number
-  image: string
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
 }
 
 const drinksData: Drink[] = [
@@ -31,9 +31,9 @@ const drinksData: Drink[] = [
     price: 3.75,
     image: "/placeholder.svg?height=100&width=100"
   }
-]
+];
 
-export function Menu() {
+export const Menu: React.FC = () => {
   return (
     <section className="py-12">
       <div className="container">
@@ -45,5 +45,5 @@ export function Menu() {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

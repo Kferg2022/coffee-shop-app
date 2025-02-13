@@ -1,34 +1,29 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from './ui/button'
-import { ShoppingCart } from 'lucide-react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Navbar, Container, Nav } from 'react-bootstrap';
+import { Coffee } from 'lucide-react'; // Keep the Coffee icon as is
+import CartIcon from './CartIcon';  // Import the CartIcon component
 
 const Header: React.FC = () => {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link to="/" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">Coffee Shop</span>
-          </Link>
-          <nav className="flex items-center space-x-6 text-sm font-medium">
-            <Link to="/" className="transition-colors hover:text-foreground/80 text-foreground">Menu</Link>
-            <Link to="/about" className="transition-colors hover:text-foreground/80 text-foreground">About</Link>
-            <Link to="/contact" className="transition-colors hover:text-foreground/80 text-foreground">Contact</Link>
-          </nav>
-        </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          <Link to="/cart">
-            <Button className="relative">
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              <span>Cart</span>
-              <span className="ml-2 rounded-full bg-primary px-2 py-1 text-xs font-bold text-primary-foreground">0</span>
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </header>
-  )
+    <Navbar bg="white" expand="md" className="border-bottom shadow-sm sticky-top">
+      <Container>
+        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+          <Coffee className="me-2" />
+          <span className="fw-bold">Coffee Shop</span>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto">
+            <Nav.Link as={Link} to="/menu" className="text-dark">Menu</Nav.Link>
+            <Nav.Link as={Link} to="/cart" className="text-dark">
+              <CartIcon /> 
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
 }
 
-export default Header
+export default Header;

@@ -15,10 +15,10 @@ export function OrderConfirmation() {
         </p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" variant="outline">
+        <Button className="w-full">
           Back to Menu
         </Button>
       </CardFooter>
     </Card>
   )
-}
+} 

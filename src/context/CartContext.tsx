@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface CartItem {
   id: number;
@@ -8,13 +8,90 @@ interface CartItem {
 }
 
 interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (itemId: number) => void;
+  cart: CartItem[];
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (id: number) => void;
+  updateQuantity: (id: number, quantity: number) => void;
+  getCartTotal: () => number;
+  getCartCount: () => number;
   clearCart: () => void;
+  pupCups: number;
+  updatePupCups: (count: number) => void;
+  removeAllPupCups: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [pupCups, setPupCups] = useState(0);
+
+  const addToCart = (item: CartItem) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(cartItem => cartItem.id === item.id);
+      if (existingItem) {
+        return prevCart.map(cartItem =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      }
+      return [...prevCart, { ...item, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== id));
+  };
+
+  const updateQuantity = (id: number, quantity: number) => {
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === id ? { ...item, quantity: quantity } : item
+      )
+    );
+  };
+
+  const getCartTotal = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const getCartCount = () => {
+    return cart.reduce((count, item) => count + item.quantity, 0);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    setPupCups(0);
+  };
+
+  const updatePupCups = (count: number) => {
+    setPupCups(count);
+  };
+
+  const removeAllPupCups = () => {
+    setPupCups(0);
+  };
+
+  return (
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        getCartTotal,
+        getCartCount,
+        clearCart,
+        pupCups,
+        updatePupCups,
+        removeAllPupCups,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
+};
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -22,34 +99,4 @@ export const useCart = () => {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
-};
-
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      if (existingItem) {
-        return prevItems.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prevItems, { ...item, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (itemId: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
-  return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
-      {children}
-    </CartContext.Provider>
-  );
 };
